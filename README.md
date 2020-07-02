@@ -1,3 +1,3 @@
 # Parsicle
 
-A description of this package.
+A Swift parser combinator framework. 
