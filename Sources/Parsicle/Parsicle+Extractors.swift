@@ -180,11 +180,7 @@ public extension Parsicle {
     }
   }
   
-  static func take(whileIn characterSet: CharacterSet, minCount: Int = 0) -> StringParsicle {
-    return take(whileIn: characterSet, withInitialCharSet: nil, minCount: minCount)
-  }
-  
-  static func take(whileIn characterSet: CharacterSet, withInitialCharSet initialCharSet: CharacterSet?, minCount: Int = 0) -> StringParsicle {
+  static func take(whileIn characterSet: CharacterSet, withInitialCharSet initialCharSet: CharacterSet? = nil, minCount: Int = 0) -> StringParsicle {
     let characterSetMatcher: ParserMatchCondition = { characterSet.containsUnicodeScalars(of: $0) }
     if let initialCharSet = initialCharSet {
       return takeWhileCharMatches(minCount: minCount, skipPastEndChar: false, name: "takeWhileInSet", initialCharMatcher: {

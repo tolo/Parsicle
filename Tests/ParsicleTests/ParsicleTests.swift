@@ -358,4 +358,42 @@ final class ParsicleTests: XCTestCase {
     XCTAssertEqual(result.value, ["A", "B", "(C,func(D,E))"])
     XCTAssertEqual(result.residual, "")
   }
+    
+  func testBuilder1() {
+    let parser = Sequential {
+      "Hello"
+      Spaces(1)
+      "World"
+      Spaces().optional()
+      Choice {
+        "🤯"
+        "😍"
+        "💩"
+      }
+    }
+    
+    XCTAssertTrue(parser.matches("Hello World 🤯"))
+    XCTAssertTrue(parser.matches("Hello World😍"))
+    XCTAssertTrue(parser.matches("Hello World 💩"))
+    XCTAssertFalse(parser.matches("HelloWorld💩"))
+    XCTAssertFalse(parser.matches("Hello World 🤬"))
+  }
+  
+  func testBuilder2() {
+    let parser: Parsicle<[String]> = Sequential {
+      String("Hello").ignore()
+      Spaces(1).ignore()
+      "World"
+      Spaces().optional().ignore()
+      Choice {
+        "🤯"
+        "😍"
+        "💩"
+      }
+    }.cast()
+    
+    let parseResult = parser.parse("Hello World 🤯")
+    let result = parseResult.value?.joined()
+    XCTAssertEqual(result, "World🤯")
+  }
 }
