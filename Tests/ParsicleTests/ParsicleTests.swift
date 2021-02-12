@@ -396,4 +396,20 @@ final class ParsicleTests: XCTestCase {
     let result = parseResult.value?.joined()
     XCTAssertEqual(result, "World🤯")
   }
+  
+  func testComment() {
+    var commentParser = S.string("/*").keepRight(S.take(untilString: "*/", andSkip: true))
+    commentParser = commentParser.map { $0.trim() }
+    let many = commentParser.skipSurroundingSpaces().many()
+    
+    let result1 = commentParser.parse("/* MU */")
+    XCTAssertTrue(result1.match)
+    XCTAssertEqual(result1.value, "MU")
+    XCTAssertEqual(result1.residual, "")
+    
+    let result2 = many.parse("/* MU */\n\n/* MUPP */")
+    XCTAssertTrue(result2.match)
+    XCTAssertEqual(result2.value, ["MU", "MUPP"])
+    XCTAssertEqual(result2.residual, "")
+  }
 }
